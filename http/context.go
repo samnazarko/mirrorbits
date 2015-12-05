@@ -4,7 +4,6 @@
 package http
 
 import (
-	. "github.com/etix/mirrorbits/config"
 	"net/http"
 	"net/url"
 )
@@ -40,13 +39,6 @@ type Context struct {
 func NewContext(w http.ResponseWriter, r *http.Request, t Templates) *Context {
 	c := &Context{r: r, w: w, t: t, v: r.URL.Query()}
 
-	if len(GetConfig().DownloadStatsPath) > 0 && r.URL.Path == GetConfig().DownloadStatsPath {
-		if c.paramBool("downloadstats") {
-			c.typ = DOWNLOADSTATS
-			c.isDlStats = true
-			return c
-		}
-	}
 	if c.paramBool("mirrorlist") {
 		c.typ = MIRRORLIST
 		c.isMirrorList = true
@@ -56,6 +48,9 @@ func NewContext(w http.ResponseWriter, r *http.Request, t Templates) *Context {
 	} else if c.paramBool("mirrorstats") {
 		c.typ = MIRRORSTATS
 		c.isMirrorStats = true
+	} else if c.paramBool("downloadstats") {
+		c.typ = DOWNLOADSTATS
+		c.isDlStats = true
 	} else if c.paramBool("md5") || c.paramBool("sha1") || c.paramBool("sha256") {
 		c.typ = CHECKSUM
 		c.isChecksum = true

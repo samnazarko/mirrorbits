@@ -405,7 +405,6 @@ type DownloadStatsPage struct {
 	Limit  int
 	Month  string
 	Today  string
-	Path   string
 }
 
 func (h *HTTP) downloadStatsHandler(w http.ResponseWriter, r *http.Request, ctx *Context) {
@@ -519,7 +518,7 @@ func (h *HTTP) downloadStatsHandler(w http.ResponseWriter, r *http.Request, ctx 
 		month := time.Now().Format("2006-01")
 
 		err = ctx.Templates().downloadstats.ExecuteTemplate(ctx.ResponseWriter(), "base",
-			DownloadStatsPage{results, period, limit, month, today, GetConfig().DownloadStatsPath})
+			DownloadStatsPage{results, period, limit, month, today})
 		if err != nil {
 			log.Error("Error rendering downloadstats: %s", err.Error())
 			http.Error(w, http.StatusText(http.StatusServiceUnavailable), http.StatusServiceUnavailable)
